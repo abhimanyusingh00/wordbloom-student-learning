@@ -20,27 +20,34 @@ const descriptors = [
   {word:'little',prefix:'little ',tone:'#9a6c43'}, {word:'bright',prefix:'bright ',tone:'#d95485'}, {word:'lovely',prefix:'lovely ',tone:'#4c8a6b'},
 ];
 const categories = ['All','Food','Animals','School','Things','Places','Nature'];
+const pluralWords = new Set(['grapes','scissors']);
 const allCards: Card[] = descriptors.flatMap((d,di) => bases.map((base,bi) => {
   const label = `${d.prefix}${base.word}`;
   const article = base.article || (/^[aeiou]/.test(label) ? 'an' : 'a');
-  return {...base,id:`${di}-${bi}`,label,sentence:`This is ${article} ${label}.`,color:d.tone};
+  const sentence = pluralWords.has(base.word) ? `These are ${label}.` : `This is ${article} ${label}.`;
+  return {...base,id:`${di}-${bi}`,label,sentence,color:d.tone};
 }));
 
 function speak(text: string) {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel(); const voice = new SpeechSynthesisUtterance(text); voice.rate=.78; voice.pitch=1.08; window.speechSynthesis.speak(voice);
+  window.speechSynthesis.cancel(); const voice = new SpeechSynthesisUtterance(text); const voices=window.speechSynthesis.getVoices(); voice.voice=voices.find(v=>/samantha|ava|serena|google us english/i.test(v.name))||voices.find(v=>v.lang.startsWith('en')&&v.localService)||null; voice.rate=.68; voice.pitch=1.02; voice.volume=.82; window.speechSynthesis.speak(voice);
 }
 
 export default function Home() {
   const [active,setActive]=useState(3); const [query,setQuery]=useState(''); const [category,setCategory]=useState('All');
-  const [mastered,setMastered]=useState<string[]>([]); const [showLibrary,setShowLibrary]=useState(false); const [soundEnabled,setSoundEnabled]=useState(false);
+  const [mastered,setMastered]=useState<string[]>([]); const [showLibrary,setShowLibrary]=useState(false); const [soundEnabled,setSoundEnabled]=useState(false); const [learningMode,setLearningMode]=useState(false);
   useEffect(()=>{try{setMastered(JSON.parse(localStorage.getItem('wordbloom-mastered')||'[]'))}catch{} return()=>window.speechSynthesis?.cancel()},[]);
   const filtered=useMemo(()=>allCards.filter(c=>(category==='All'||c.category===category)&&(`${c.label} ${c.sentence}`.includes(query.toLowerCase()))),[category,query]);
   const item=filtered[active%Math.max(filtered.length,1)]||allCards[0];
-  useEffect(()=>{if(soundEnabled)speak(`${item.label}. ${item.sentence} Now you say it.`)},[active,soundEnabled,item.label,item.sentence]);
+  useEffect(()=>{if(soundEnabled)speak(`${item.label}. ${item.sentence}`)},[active,soundEnabled,item.label,item.sentence]);
   function toggleMastered(){const next=mastered.includes(item.id)?mastered.filter(x=>x!==item.id):[...mastered,item.id];setMastered(next);localStorage.setItem('wordbloom-mastered',JSON.stringify(next))}
   function pickNext(direction=1){setActive(a=>(a+direction+filtered.length)%filtered.length)}
-  function startLibrary(){setShowLibrary(true);setSoundEnabled(true);setTimeout(()=>document.getElementById('learn')?.scrollIntoView({behavior:'smooth',block:'center'}),50)}
+  function startLibrary(){setShowLibrary(true);setLearningMode(true);setSoundEnabled(true)}
+  if(learningMode) return <main className="focus-lesson" style={{'--card-color':item.color} as React.CSSProperties}>
+    <div className="focus-picture"><span className="focus-spark one">✦</span><span className="focus-spark two">✦</span><span role="img" aria-label={item.label}>{item.emoji}</span></div>
+    <div className="focus-copy"><p className="focus-counter">WORD {(active%filtered.length)+1} OF {filtered.length}</p><h1>{item.label}</h1><p>{item.sentence}</p><span className="now-speaking">🔊 Sound plays automatically</span></div>
+    <button className="focus-next" onClick={()=>pickNext(1)} aria-label="Next word"><span>Next word</span><b>→</b></button>
+  </main>;
   return <main>
     <header className="topbar"><a className="brand" href="#top"><span className="brand-mark">W</span><span>WordBloom</span></a><nav><a className="active-link" href="#learn">Learn</a><a href="#library">Explore</a><a href="#progress">My progress</a></nav><button className="profile" aria-label="Student profile">AS</button></header>
     <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow"><span>✦</span> Make words your superpower</p><h1>See it. Hear it.<br/><em>Say it!</em></h1><p className="intro">Build a world of words with playful pictures, clear pronunciation, and little wins every day.</p><div className="hero-actions"><button className="primary-button" onClick={startLibrary}>Start learning <span>→</span></button><button className="sound-button" onClick={()=>speak('Welcome to WordBloom. Let us learn together!')}><span>🔊</span> Try the sound</button></div><div className="mini-proof"><div className="faces"><span>🧒</span><span>👧</span><span>👦</span></div><p><strong>{allCards.length.toLocaleString()} picture words</strong><br/>ready to explore</p></div></div>

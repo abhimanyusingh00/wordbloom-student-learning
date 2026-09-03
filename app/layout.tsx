@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import './library.css';
 import './controls.css';
+import './focus.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://wordbloom-student-words.abhimanyusingh-as919.chatgpt.site'),
