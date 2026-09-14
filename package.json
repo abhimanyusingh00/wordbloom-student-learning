@@ -7,9 +7,13 @@
   },
   "scripts": {
     "dev": "vinext dev",
+    "words:fetch": "node scripts/fetch-images.mjs",
+    "words:mirror": "node scripts/fetch-images.mjs --mirror",
+    "words:optimize": "node scripts/optimize-images.mjs",
     "build": "vinext build",
+    "build:pages": "next build",
     "start": "vinext start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern out --ignore-pattern public"
   },
   "dependencies": {
     "next": "16.2.6",

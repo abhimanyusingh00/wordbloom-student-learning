@@ -1,0 +1,24 @@
+# Netlify build settings. This file wins over whatever is configured in the
+# Netlify UI, so the deploy setup lives with the code instead of in a dashboard.
+#
+# `npm run build` is NOT the right command here: it runs `vinext build`, which
+# targets Cloudflare Workers and never produces a directory Netlify can serve.
+# WordBloom is a static export (next.config.ts sets `output: 'export'`), so the
+# Next build writes plain HTML and assets into out/.
+
+[build]
+  command = "npm run build:pages"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The Next.js runtime plugin is for server-rendered deploys. This site is fully
+# prerendered, so it must not be enabled — leave the plugins list empty.
+
+[[headers]]
+  for = "/words/*"
+  [headers.values]
+    # Photographs are content-addressed by word and only ever replaced wholesale,
+    # so they can be cached hard.
+    Cache-Control = "public, max-age=31536000, immutable"

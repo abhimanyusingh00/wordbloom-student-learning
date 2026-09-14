@@ -1,0 +1,76 @@
+/* Attribution page for every photograph shipped with the site. */
+
+.credits {
+  width: min(880px, 100% - 40px);
+  margin: 0 auto;
+  padding: 30px 0 70px;
+}
+
+.credits-head {
+  margin-bottom: 40px;
+}
+
+.credits-head h1 {
+  margin: 22px 0 10px;
+  font-size: clamp(34px, 6vw, 50px);
+  letter-spacing: -1.5px;
+}
+
+.credits-head p {
+  max-width: 60ch;
+  color: var(--ink-soft);
+}
+
+.credits summary {
+  margin-top: 10px;
+  padding: 14px 4px;
+  border-bottom: 2px solid var(--line);
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.credits summary span {
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.credit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--line);
+}
+
+.credit-list li {
+  display: grid;
+  grid-template-columns: 130px 1fr auto auto;
+  gap: 14px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.credit-list b {
+  color: var(--ink);
+  text-transform: lowercase;
+  font-size: 16px;
+}
+
+.credit-list a {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 640px) {
+  .credit-list li {
+    grid-template-columns: 1fr auto;
+    row-gap: 4px;
+  }
+
+  .credit-list b {
+    grid-column: 1 / -1;
+  }
+}

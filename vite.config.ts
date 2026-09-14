@@ -2,7 +2,17 @@ import { sites } from '@openai/sites-vite-plugin';
 import tailwindcss from '@tailwindcss/postcss';
 import vinext from 'vinext';
 import { defineConfig } from 'vite';
-import hostingConfig from './.openai/hosting.json';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+// .openai/hosting.json describes the Codex workspace's D1/R2 bindings. Importing
+// it statically made the whole config unloadable wherever the file is absent —
+// a clean CI checkout, or anyone who has not run the Codex tooling — so it is
+// read at runtime with a no-bindings fallback instead.
+const hostingPath = fileURLToPath(new URL('./.openai/hosting.json', import.meta.url));
+const hostingConfig: { d1: string | null; r2: string | null } = existsSync(hostingPath)
+  ? JSON.parse(readFileSync(hostingPath, 'utf8'))
+  : { d1: null, r2: null };
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   '00000000-0000-4000-8000-000000000000';

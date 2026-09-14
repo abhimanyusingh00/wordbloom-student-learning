@@ -1,0 +1,210 @@
+/* The picture dictionary: search, category chips, and the word grid. */
+
+.library {
+  width: var(--page);
+  margin: 0 auto 60px;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.section-head h2 {
+  margin: 10px 0 6px;
+  font-size: clamp(30px, 5vw, 44px);
+  letter-spacing: -1.5px;
+}
+
+.section-note {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.progress-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius);
+  padding: 14px 22px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.progress-pill span {
+  font-size: 34px;
+  font-weight: 900;
+  color: var(--coral);
+}
+
+.progress-pill small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 240px;
+  max-width: 340px;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 0 18px;
+  background: var(--paper);
+}
+
+.search span {
+  color: var(--ink-soft);
+  font-size: 19px;
+}
+
+.search input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: none;
+  padding: 13px 0;
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.results-line {
+  margin: 0 0 16px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.word-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 18px;
+}
+
+.word-tile {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.word-tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+.word-tile.learned {
+  border-color: #1aa283;
+}
+
+.tile-photo {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: color-mix(in srgb, var(--accent) 12%, #fff);
+  aspect-ratio: 4 / 3;
+}
+
+/* Absolute, not `height: 100%`: inside a column flex container the button has
+   no resolved height for a percentage to refer to, so the photo would fall back
+   to its natural size and every card in a row would end up a different height. */
+.tile-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tile-photo em {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 92%);
+  font-style: normal;
+  font-size: 16px;
+}
+
+.tile-photo b {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1aa283;
+  color: #fff;
+  font-size: 15px;
+}
+
+.tile-copy {
+  flex: 1;
+  padding: 14px 16px 10px;
+}
+
+.tile-copy h3 {
+  font-size: 21px;
+  text-transform: lowercase;
+}
+
+.tile-copy p {
+  margin: 6px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.tile-open {
+  border: 0;
+  border-top: 2px solid var(--line);
+  padding: 12px;
+  background: none;
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.tile-open:hover {
+  background: color-mix(in srgb, var(--accent) 10%, #fff);
+}
+
+.empty-note {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.more-row {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0 10px;
+}
